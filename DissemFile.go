@@ -25,14 +25,17 @@ func (self *DissemFile) Init() {
 }
 
 func (self *DissemFile) LoadFile(filename string) error {
-	self.Init()
-
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return err
 	}
+	return self.LoadData(data)
+}
 
-	err = self.sliceDocuments(data)
+func (self *DissemFile) LoadData(data []byte) error {
+	self.Init()
+
+	err := self.sliceDocuments(data)
 	if err != nil {
 		return err
 	}
