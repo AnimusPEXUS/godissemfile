@@ -2,8 +2,9 @@ package godissemfile
 
 import (
 	"bytes"
-	"regexp"
-	"strings"
+
+	"github.com/antchfx/htmlquery"
+	"golang.org/x/net/html"
 )
 
 var (
@@ -53,42 +54,47 @@ func FindCDocument(s []byte) (int, int) {
 	return ret, ret2
 }
 
-var RE_ATTR_LINE_C = regexp.MustCompile(`\<(?P<name>[A-Za-z][A-Za-z0-9_\-]*)\>(?P<value>.*)`)
+// var RE_ATTR_LINE_C = regexp.MustCompile(`\<(?P<name>[A-Za-z][A-Za-z0-9_\-]*)\>(?P<value>.*)`)
 
-func AttributesFromData(data []byte) []*DissemAttr {
+func AttributesFromData(data []byte) (*html.Node, error) {
 
 	// TODO: use htmlquery.Parse ?
 
-	ret := make([]*DissemAttr, 0)
+	// ret := make([]*DissemAttr, 0)
 
-	var attrs_block_str_split = strings.Split(string(data), "\n")
+	// var attrs_block_str_split = strings.Split(string(data), "\n")
 
-	for _, i := range attrs_block_str_split {
-		re_f_sm := RE_ATTR_LINE_C.FindStringSubmatch(i)
-		if len(re_f_sm) == 0 {
-			continue
-		}
+	// for _, i := range attrs_block_str_split {
+	// 	re_f_sm := RE_ATTR_LINE_C.FindStringSubmatch(i)
+	// 	if len(re_f_sm) == 0 {
+	// 		continue
+	// 	}
 
-		var name string
-		var value string
+	// 	var name string
+	// 	var value string
 
-		for ii, i := range RE_ATTR_LINE_C.SubexpNames() {
-			switch i {
-			case "name":
-				name = re_f_sm[ii]
-			case "value":
-				value = re_f_sm[ii]
-			}
-		}
+	// 	for ii, i := range RE_ATTR_LINE_C.SubexpNames() {
+	// 		switch i {
+	// 		case "name":
+	// 			name = re_f_sm[ii]
+	// 		case "value":
+	// 			value = re_f_sm[ii]
+	// 		}
+	// 	}
 
-		if len(re_f_sm) >= 3 {
-			a := &DissemAttr{
-				Name:  strings.TrimSpace(name),
-				Value: strings.TrimSpace(value),
-			}
-			ret = append(ret, a)
-		}
+	// 	if len(re_f_sm) >= 3 {
+	// 		a := &DissemAttr{
+	// 			Name:  strings.TrimSpace(name),
+	// 			Value: strings.TrimSpace(value),
+	// 		}
+	// 		ret = append(ret, a)
+	// 	}
+	// }
+
+	ret, err := htmlquery.Parse(bytes.NewReader(data))
+	if err != nil {
+		return nil, err
 	}
 
-	return ret
+	return ret, nil
 }

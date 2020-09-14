@@ -1,7 +1,9 @@
 package godissemfile
 
+import "golang.org/x/net/html"
+
 type DissemDocument struct {
-	Attributes []*DissemAttr
+	Attributes *html.Node
 	Text       []byte
 }
 
@@ -29,7 +31,12 @@ func (self *DissemDocument) sliceAttributes(data []byte) error {
 	t0, _ := FindOText(data)
 	x := data[:t0]
 
-	self.Attributes = AttributesFromData(x)
+	a, err := AttributesFromData(x)
+	if err != nil {
+		return err
+	}
+
+	self.Attributes = a
 
 	return nil
 }

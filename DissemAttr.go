@@ -1,6 +1,6 @@
 package godissemfile
 
-type DissemAttr struct {
-	Name  string
-	Value string
-}
+// type DissemAttr struct {
+// 	Name  string
+// 	Value string
+// }

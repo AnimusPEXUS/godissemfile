@@ -3,13 +3,15 @@ package godissemfile
 import (
 	"errors"
 	"io/ioutil"
+
+	"golang.org/x/net/html"
 )
 
 var ERR_INVALID_DOCUMENT = errors.New("invalid document")
 
 type DissemFile struct {
 	Preamble   []byte
-	Attributes []*DissemAttr
+	Attributes *html.Node
 	Documents  []*DissemDocument
 }
 
@@ -20,7 +22,7 @@ func NewDissemFile() *DissemFile {
 }
 
 func (self *DissemFile) Init() {
-	self.Attributes = make([]*DissemAttr, 0)
+	// self.Attributes = make([]*DissemAttr, 0)
 	self.Documents = make([]*DissemDocument, 0)
 }
 
@@ -85,7 +87,12 @@ func (self *DissemFile) sliceAttributes(data []byte) error {
 		subdata = data[sub1:first_document]
 	}
 
-	self.Attributes = AttributesFromData(subdata)
+	a, err := AttributesFromData(subdata)
+	if err != nil {
+		return err
+	}
+
+	self.Attributes = a
 
 	return nil
 }
