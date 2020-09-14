@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/antchfx/htmlquery"
+
 	"github.com/AnimusPEXUS/godissemfile"
 )
 
@@ -16,8 +18,17 @@ func main() {
 	log.Println("Preamble:", f.Preamble)
 	log.Println("Preamble (str):", string(f.Preamble))
 	log.Println("Attributes:")
-	for _, i := range f.Attributes {
-		log.Println(" ", i.Name, "=", i.Value)
+
+	log.Println(htmlquery.OutputHTML(f.Attributes, true))
+
+	r, err := htmlquery.Query(f.Attributes, "//effectiveness-date")
+	if err != nil {
+		log.Fatalln(err)
 	}
+
+	if r != nil {
+		log.Println("effectiveness-date", r.FirstChild.Data)
+	}
+
 	log.Println("Documents:", len(f.Documents))
 }
