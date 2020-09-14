@@ -13,6 +13,9 @@ var (
 	TEXT_O_TXT     = []byte(`<TEXT>`)
 	TEXT_O_TXT_LEN = len(TEXT_O_TXT)
 
+	TEXT_C_TXT     = []byte(`</TEXT>`)
+	TEXT_C_TXT_LEN = len(TEXT_C_TXT)
+
 	DOCUMENT_O_TXT     = []byte(`<DOCUMENT>`)
 	DOCUMENT_O_TXT_LEN = len(DOCUMENT_O_TXT)
 
@@ -29,6 +32,12 @@ func FindOSubmission(s []byte) (int, int) {
 func FindOText(s []byte) (int, int) {
 	ret := bytes.Index(s, TEXT_O_TXT)
 	ret2 := ret + TEXT_O_TXT_LEN
+	return ret, ret2
+}
+
+func FindCText(s []byte) (int, int) {
+	ret := bytes.Index(s, TEXT_C_TXT)
+	ret2 := ret + TEXT_C_TXT_LEN
 	return ret, ret2
 }
 
